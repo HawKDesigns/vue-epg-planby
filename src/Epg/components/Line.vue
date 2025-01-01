@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { isToday, startOfDay } from 'date-fns'
+import { isToday, startOfDay, addDays } from 'date-fns'
 import type { Ref } from 'vue'
 import type { DateTime } from '../helpers/types'
 
@@ -13,6 +13,7 @@ const props = defineProps<{
   dayWidth: number
   hourWidth: number
   sidebarWidth: number
+  numberOfDays: number // New prop for multiple days
 }>()
 
 interface useLineProps {
@@ -21,6 +22,7 @@ interface useLineProps {
   dayWidth: Ref<number>
   hourWidth: Ref<number>
   sidebarWidth: Ref<number>
+  numberOfDays: Ref<number> // New prop for multiple days
 }
 
 function useLine({
@@ -29,19 +31,20 @@ function useLine({
   dayWidth,
   hourWidth,
   sidebarWidth,
+  numberOfDays // New parameter for multiple days
 }: useLineProps) {
   const initialState
     = getPositionX(
       startOfDay(new Date(startDate.value)),
       new Date(),
       startDate.value,
-      endDate.value,
+      addDays(endDate.value, numberOfDays.value), // Adjust endDate for multiple days
       hourWidth.value,
     ) + sidebarWidth.value
 
   const positionX = ref<number>(initialState)
 
-  const isDayEnd = computed(() => positionX.value <= dayWidth.value)
+  const isDayEnd = computed(() => positionX.value <= dayWidth.value * numberOfDays.value) // Adjust dayWidth for multiple days
 
   const isScrollX = computed(() => (isDayEnd.value ? PROGRAM_REFRESH : undefined))
 
@@ -58,7 +61,7 @@ function useLine({
       startOfDay(new Date(startDate.value)),
       new Date(),
       startDate.value,
-      endDate.value,
+      addDays(endDate.value, numberOfDays.value), // Adjust endDate for multiple days
       hourWidth.value,
     ) + sidebarWidth.value
     positionX.value = newPositionX
@@ -67,10 +70,10 @@ function useLine({
   return { positionX }
 }
 
-const { startDate, endDate, dayWidth, hourWidth, sidebarWidth } = toRefs(props)
+const { startDate, endDate, dayWidth, hourWidth, sidebarWidth, numberOfDays } = toRefs(props)
 
 const { positionX } = useLine({
-  startDate, endDate, dayWidth, hourWidth, sidebarWidth,
+  startDate, endDate, dayWidth, hourWidth, sidebarWidth, numberOfDays
 })
 
 const date = new Date(props.startDate)
