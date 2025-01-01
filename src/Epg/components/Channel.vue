@@ -9,7 +9,7 @@ const emit = defineEmits<{
   (event: 'click', channel: ChannelWithPosiiton): void
 }>()
 
-const { theme, sidebarWidth } = useEpgStore()
+const { theme } = useEpgStore()
 </script>
 
 <template>
@@ -24,7 +24,14 @@ const { theme, sidebarWidth } = useEpgStore()
     @click="emit('click', channel)"
   >
     <slot name="channel" v-bind="{ channel, theme }">
-      <img :src="channel.logo" :style="{ maxHeight: '60px', maxWidth: `${sidebarWidth}px` }" class="relative">
+      <img 
+        :src="channel.logo" 
+        class="relative w-full h-full object-contain p-2">
+        :style="{
+          maxHeight: '100%',
+          maxWidth: '100%'
+        }"
+      />
     </slot>
   </div>
 </template>
