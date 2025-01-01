@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<{
   dayWidth: number
   hourWidth: number
   numberOfHoursInDay: number
+  numberOfDays: number // New prop for multiple days
   offsetStartHoursRange: number
   sidebarWidth: number
   itemHeight: number
@@ -64,7 +65,7 @@ const visiblePrograms = computed(() => {
     />
     <Timeline
       v-if="isTimeline" :is-base-time-format="isBaseTimeFormat" :is-sidebar="isSidebar" :day-width="dayWidth"
-      :hour-width="hourWidth" :number-of-hours-in-day="numberOfHoursInDay"
+      :hour-width="hourWidth" :number-of-hours-in-day="numberOfHoursInDay" :number-of-days="numberOfDays" // Pass numberOfDays
       :offset-start-hours-range="offsetStartHoursRange" :sidebar-width="sidebarWidth"
     >
       <template #timeline="slotData">
@@ -90,7 +91,7 @@ const visiblePrograms = computed(() => {
       data-testid="content" class="relative" :style="{
         background: `${theme.primary['900']}`,
         height: `${contentHeight}px`,
-        width: `${dayWidth}px`,
+        width: `${dayWidth * numberOfDays}px`, // Adjust width for multiple days
         left: `${isSidebar ? sidebarWidth : 0}px`,
       }"
     >
