@@ -1,17 +1,14 @@
 import { format } from 'date-fns'
-
-// Import types
 import type { Ref } from 'vue'
 import type { BaseTimeFormat } from '../helpers/types'
-
-// Import helpers
 import { TIME_FORMAT, generateArray } from '../helpers'
 
 export function useTimeline(
   numberOfHoursInDay: Ref<number>,
   isBaseTimeFormat: Ref<BaseTimeFormat>,
+  numberOfDays: Ref<number> // New parameter for multiple days
 ) {
-  const times = computed(() => generateArray(numberOfHoursInDay.value))
+  const times = computed(() => generateArray(numberOfHoursInDay.value * numberOfDays.value)) // Adjust times for multiple days
   const dividers = generateArray(4)
 
   const formatTimelineTime = (index: number) => {
