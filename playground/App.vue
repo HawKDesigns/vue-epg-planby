@@ -128,7 +128,7 @@ const endDate = computed(() => {
   day.setHours(0)
   day.setMinutes(0)
   day.setSeconds(0)
-  return formatTime(addDays(day, 1))
+  return formatTime(addDays(day, numberOfDays.value))
 })
 
 const itemHeight = ref(80)
@@ -136,6 +136,7 @@ const itemHeight = ref(80)
 const datePercent = ref(100)
 
 const timeRangeEpg = ref([0, 24])
+const numberOfDays = ref(1)  // New ref for number of days
 const dayWidth = computed(() => {
   const range = timeRangeEpg.value[1] - timeRangeEpg.value[0]
   return 10000 / (24 / range) * datePercent.value / 100
@@ -168,6 +169,7 @@ const { getEpgProps, getLayoutProps, onScrollToNow } = useEpg({
   endDate,
   isBaseTimeFormat,
   theme,
+  numberOfDays  // Pass numberOfDays to useEpg
 })
 
 async function fetchDate() {
@@ -230,6 +232,9 @@ function onChannelClick(c: Channel) {
               v-model="timeRange" :disabled-seconds="disabledSeconds" is-range range-separator="To"
               start-placeholder="Start time" end-placeholder="End time"
             />
+          </el-form-item>
+          <el-form-item label="Number of Days">  <!-- New form item for number of days -->
+            <el-input-number v-model="numberOfDays" :min="1" :max="7" :step="1" />
           </el-form-item>
           <el-form-item label="Item Height">
             <el-input-number v-model="itemHeight" :min="80" :max="200" :step="10" />
